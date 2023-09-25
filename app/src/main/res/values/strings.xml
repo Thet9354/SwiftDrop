@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SwiftDrop</string>
+    <string name="delivery_info">When placing an order, select the option “Contactless delivery” and the courier will leave your order at the door.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

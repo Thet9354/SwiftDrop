@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_ripple">#A259FF</color>
+    <color name="white">#F6F5F5</color>
+    <color name="primary_green">#0BCE83</color>
+    <color name="selected_violet">#7203FF</color>
+    <color name="green">#CBF265</color>
+    <color name="text_primary">#2D0C57</color>
+    <color name="text_secondary">#9586A8</color>
+    <color name="selected_bg_violet">#E2CBFF</color>
+
+
+</resources>
