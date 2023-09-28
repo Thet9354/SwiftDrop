@@ -8,6 +8,8 @@
     <color name="text_primary">#2D0C57</color>
     <color name="text_secondary">#9586A8</color>
     <color name="selected_bg_violet">#E2CBFF</color>
+    <color name="border">#D9D0E3</color>
+
 
 
 </resources>

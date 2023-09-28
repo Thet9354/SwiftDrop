@@ -4,4 +4,22 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string-array name="category_title">
+        <item name="cat1">Vegetables</item>
+        <item name="cat2">Fruits</item>
+        <item name="cat3">Bread</item>
+        <item name="cat4">Sweets</item>
+        <item name="cat5">Pasta</item>
+        <item name="cat6">Drinks</item>
+    </string-array>
+
+    <string-array name="numOfItems">
+        <item name="cat1">(43)</item>
+        <item name="cat2">(32)</item>
+        <item name="cat3">(22)</item>
+        <item name="cat4">(56)</item>
+        <item name="cat5">(43)</item>
+        <item name="cat6">(23)</item>
+    </string-array>
+
 </resources>

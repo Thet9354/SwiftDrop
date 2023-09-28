@@ -1,66 +1,148 @@
 package com.example.swiftdrop.fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
 
+import com.example.swiftdrop.Adapter.CategoryAdapter;
+import com.example.swiftdrop.Model.CategoryItem;
 import com.example.swiftdrop.R;
+import com.example.swiftdrop.Screens.Item;
+import com.example.swiftdrop.Screens.Splash_Screen;
+import com.example.swiftdrop.SpaceItemDecoration;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Categories#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class Categories extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ImageView imgView_back;
+    private androidx.appcompat.widget.SearchView sw_categories;
+    private androidx.recyclerview.widget.RecyclerView rv_categories;
+    CategoryAdapter categoryAdapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Context mContext;
 
-    public Categories() {
-        // Required empty public constructor
-    }
+    private final ArrayList<CategoryItem> categoryItemArrayList = new ArrayList<>();
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Categories.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Categories newInstance(String param1, String param2) {
-        Categories fragment = new Categories();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    int[] categoryPics = {R.drawable.broccoli, R.drawable.orange, R.drawable.bread, R.drawable.sweets, R.drawable.pasta, R.drawable.drink};
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_categories, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_categories, container, false);
+
+        mContext = getActivity();
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        return rootView;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        findViews(view);
+    }
+
+    private void findViews(View v) {
+
+        imgView_back = v.findViewById(R.id.imgView_back);
+        sw_categories = v.findViewById(R.id.sw_categories);
+        rv_categories = v.findViewById(R.id.rv_categories);
+
+        initWidget();
+
+        pageDirectories();
+    }
+
+    private void pageDirectories() {
+        imgView_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, Splash_Screen.class));
+            }
+        });
+    }
+
+    private void initWidget() {
+
+        initRecView();
+    }
+
+    private void initRecView() {
+        // Init RecyclerView
+
+        // Set the layout manager (GridLayoutManager)
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
+        rv_categories.setLayoutManager(gridLayoutManager);
+
+        // Add spacing between items
+        int spaceInPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+        rv_categories.addItemDecoration(new SpaceItemDecoration(spaceInPixels));
+
+        // Optimize for fixed size if the data won't change dynamically
+        rv_categories.setHasFixedSize(true);
+
+        // Create and set the adapter
+        categoryAdapter = new CategoryAdapter(mContext, categoryItemArrayList);
+        rv_categories.setAdapter(categoryAdapter);
+
+        new loadCategories().execute();
+    }
+
+    CategoryItem categoryItem;
+
+    class loadCategories extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... args) {
+            try {
+
+                String[] catItems = getResources().getStringArray(R.array.category_title);
+                String[] numOfItems = getResources().getStringArray(R.array.numOfItems);
+
+                for (int i = 0; i < catItems.length; i++) {
+                    categoryItem = new CategoryItem();
+                    categoryItem.setTitle(catItems[i]);
+                    categoryItem.setNumOfItems(numOfItems[i]);
+                    categoryItem.setImage(categoryPics[i]);
+                    categoryItemArrayList.add(categoryItem);
+                    categoryItem = null;
+                    System.out.println("Hello world");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            if (categoryItemArrayList != null && categoryItemArrayList.size() > 0) {
+                categoryAdapter = new CategoryAdapter(mContext, categoryItemArrayList);
+                rv_categories.setAdapter(categoryAdapter);
+                categoryAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
 }
+
